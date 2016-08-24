@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var http = require("http");
 var ShareDB = require("sharedb");
 var connect = require("connect");
