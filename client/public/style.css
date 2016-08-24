@@ -11,6 +11,11 @@ body {
   padding: 0;
 }
 
+.navbar {
+  background:darkgray;
+  margin-bottom: 20px;
+}
+
 .outer {
   margin: 0 auto;
   max-width: 480px;
