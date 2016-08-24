@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactKonva = require('react-konva');
+var className = require('className');
 
 var Canvas = () => (
   <div className="stage">
