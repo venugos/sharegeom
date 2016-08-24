@@ -3,7 +3,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Canvas = require('./Canvas.jsx');
 var Nav = require('./Nav.jsx');
-var className = require('className');
+var className = require('classnames');
 
 
 var App = () => (

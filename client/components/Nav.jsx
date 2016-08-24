@@ -1,6 +1,6 @@
 //import React from 'react';
 var React = require('react');
-var className = require('className');
+var className = require('classnames');
 
 var Nav = () => (
   <nav className="navbar">
