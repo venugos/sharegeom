@@ -20,6 +20,7 @@
     "connect": "^3.4.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-konva": "^1.0.5",
     "serve-static": "^1.11.1",
     "sharedb": "^1.0.0-beta",
     "sharedb-mingo-memory": "^1.0.0-beta",
