@@ -1,7 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactKonva = require('react-konva');
-//var MyRect = require('./MyRect.jsx');
+
+var className = require('classnames');
 
 
 var Canvas = () => (
