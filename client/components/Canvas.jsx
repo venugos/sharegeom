@@ -13,9 +13,11 @@ var onDragMove = function (evt) {
 }
 
 var Canvas = (props) => {
+  var width = $('.outer').height();
+  var height = $('.outer').width();
     return  (
     <div className="stage">
-      <ReactKonva.Stage height={600} width={600}>
+      <ReactKonva.Stage height={594} width={594}>
           <ReactKonva.Layer listening={true} onDragEnd={onLayerClick} onDragMove={onDragMove}>
             { props.shapes } 
           </ReactKonva.Layer>

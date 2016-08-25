@@ -18,6 +18,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "connect": "^3.4.1",
+    "jquery": "^3.1.0",
     "konva": "^1.1.0",
     "lodash": "^4.15.0",
     "react": "^15.1.0",
