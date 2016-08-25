@@ -13,7 +13,6 @@ var onDragMove = function (evt) {
 }
 
 var Canvas = (props) => {
-  console.log(props);
     return  (
     <div className="stage">
       <ReactKonva.Stage height={600} width={600}>
@@ -26,5 +25,6 @@ var Canvas = (props) => {
 }
 
 
+module.exports = Canvas;
 
 
