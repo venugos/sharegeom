@@ -56,8 +56,11 @@ connection.createFetchQuery('shapes', {}, {}, function (err, results) {
 
   if (results.length === 0) {
     var shapes = [
-      { "attrs": { "x": 20, "y": 20, "radius": 10, "stroke": "black", "opacity": 0.5, "id": "06cd3a10-6a80-11e6-a419-2d4513a4e8d9", "draggable": true }, "className": "Circle" },
-      { "attrs": { "x": 100, "y": 100, "width": 50, "height": 70, "stroke": "black", "opacity": 0.5, "id": "06cd6120-6a80-11e6-a419-2d4513a4e8d9", "draggable": true }, "className": "Rect" }
+      { "attrs": { "x":50,"y":60,"radius":30,"stroke":"red","strokeWidth":5,"opacity":0.5,"id":"153f80a0-6b14-11e6-9e62-0d0025ef39ce","draggable":true},"className":"Circle"},
+      { "attrs": { "x":20,"y":150,"width":50,"height":50,"stroke":"blue","strokeWidth":5,"opacity":0.5,"id":"153fcec0-6b14-11e6-9e62-0d0025ef39ce","draggable":true},"className":"Rect"},
+      { "attrs": { "points":[5,20,30],"stroke":"green","lineCap":"round","lineJoin":"round","id":"67b765e1-6b10-11e6-933d-93ca88ca7b1a","draggable":true, "opacity": .5},"className":"Line"},
+      { "attrs": { "points":[25,40,75],"stroke":"red","lineCap":"round","lineJoin":"round","tension":1,"id":"67b765e2-6b10-11e6-933d-93ca88ca7b1a","draggable":true},"className":"Line"},
+      { "attrs": { "x":20,"y":250, "text":"aut viam inveniam aut faciam","fontSize":14,"fontFamily":"Helvetica Neue", "fontStyle":"bold", "fill":"darkgray","id":"aa87dc80-6b13-11e6-8092-552e4cc2f9f6","draggable":true},"className":"Text"}
     ];
 
     shapes.forEach(function (shape, index) {
@@ -67,7 +70,7 @@ connection.createFetchQuery('shapes', {}, {}, function (err, results) {
       //     attrs: props of shape,
       //   className: type of shape  
       // }
-      //console.log("Shape: ", shape);
+      console.log("Shape: ", shape);
       var data = { key: shape.attrs.id, attrs: shape.attrs, className: shape.className };
       doc.create(data);
     });

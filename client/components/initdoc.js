@@ -15,10 +15,11 @@ var initDoc = function () {
 
   // create a circle
   var circle = new Konva.Circle({
-    x: 20,
-    y: 20,
-    radius: 10,
-    stroke: 'black',
+    x: 50,
+    y: 60,
+    radius: 30,
+    stroke: 'red',
+    strokeWidth: 5,
     opacity: 0.5,
     id: uuid.v1(),
     draggable: true
@@ -26,12 +27,49 @@ var initDoc = function () {
 
   // create a rectangle
   var rect = new Konva.Rect({
-    x: 100,
-    y: 100,
+    x: 20,
+    y: 150,
     width: 50,
-    height: 70,
-    stroke: 'black',
+    height: 50,
+    stroke: 'blue',
+    strokeWidth: 5,
     opacity: 0.5,
+    id: uuid.v1(),
+    draggable: true,
+
+  });
+
+  var line = new Konva.Line({
+    points: [5, 70, 140, 250],
+    stroke: 'green',
+    strokeWidth: 2,
+    lineCap: 'round',
+    lineJoin: 'round',
+    id: uuid.v1(),
+    draggable: true
+  });
+
+  var spline = new Konva.Line({
+    x: 20,
+    y: 300,
+    points: [25, 40, 75],
+    stroke: 'red',
+    strokeWidth: 2,
+    lineCap: 'round',
+    lineJoin: 'round',
+    tension : 1,
+    id: uuid.v1(),
+    draggable: true
+  });
+
+  var text = new Konva.Text({
+    x: 20,
+    y: 250,
+    text: 'aut viam inveniam aut faciam',
+    fontSize: 14,
+    fontFamily: 'Helvetica Neue',
+    fontStyle: 'bold',
+    fill: 'darkgray',
     id: uuid.v1(),
     draggable: true
   });
@@ -39,6 +77,9 @@ var initDoc = function () {
   // add shapes to the layer
   layer.add(circle);
   layer.add(rect);
+  layer.add(line);
+  layer.add(spline);
+  layer.add(text);
 
   // add the layer to the stage
   stage.add(layer);

@@ -30,6 +30,14 @@ var createShapeElements = function (shapeDocs) {
     if (shapeDoc.data.className === 'Circle') {
       return <ReactKonva.Circle {...shapeDoc.data.attrs}/>;
     }
+    if (shapeDoc.data.className === 'Line') {
+      console.log("Creating a Line");
+      return <ReactKonva.Line {...shapeDoc.data.attrs}/>;
+    }
+    if (shapeDoc.data.className === 'Text') {
+      console.log("Creating a Text");
+      return <ReactKonva.Text {...shapeDoc.data.attrs}/>;
+    }
   });
 };
 
@@ -47,13 +55,13 @@ var Canvas = React.createClass({
     query.on('changed', update);
 
     function update() {
-      //console.log("Query results: ", query.results);
+      console.log("Query results: ", query.results);
       comp.setState({ shapes: createShapeElements(query.results) });
     }
   },
 
   render: function () {
-    //console.log("Rendering shapes: ", this.state.shapes);
+    console.log("Rendering shapes: ", this.state.shapes);
     return (
       <div className="stage" >
         <ReactKonva.Stage  height={600} width={600}>

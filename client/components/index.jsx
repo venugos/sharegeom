@@ -10,6 +10,6 @@ connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host
 
 // Expose to index.html
 window.renderApp = function () {
-  //Init();
+   Init();
   ReactDOM.render(<App />, document.querySelector('#app'));
 };
