@@ -4,7 +4,7 @@
   "description": "sharedgeom final project",
   "main": "server.js",
   "scripts": {
-    "build": "mkdir -p client/public/dist/ && ./node_modules/.bin/browserify -t [ babelify --presets [ react ] ] client/components/index.jsx -o client/public/dist/bundle.js",
+    "build": "mkdir -p client/public/dist/ && ./node_modules/.bin/browserify -t [ babelify --presets [ react ] ] client/components/index.jsx -o client/public/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js"
   },
