@@ -33,7 +33,15 @@ var initDoc = function () {
     stroke: 'black',
     opacity: 0.5,
     id: uuid.v1(),
-    draggable: true
+    draggable: true,
+    dragBoundFunc: function(pos) {
+            var newY = pos.y < 50 ? 50 : pos.y;
+            console.log("drag bound",pos)
+            return {
+                x: pos.x,
+                y: newY
+            };
+        }
   });
 
   // add shapes to the layer

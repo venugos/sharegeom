@@ -20,15 +20,26 @@ var handleMove = function (shape) {
   });
 };
 
+
+var dragBoundFunc=function(pos) {
+            var newY = (pos.y < 50 || pos.y > 550 )? 50 : pos.y;
+
+            var newX = (pos.x < 50 || pos.x > 550 ) ?50 : pos.x;
+            console.log("drag bound",pos)
+            return {
+                x: newX,
+                y: newY
+            }
+        };
 /// From server JSON data, create Konva elements and return them
 /// 
 var createShapeElements = function (shapeDocs) {
   return shapeDocs.map(function (shapeDoc, index) {
     if (shapeDoc.data.className === 'Rect') {
-      return <ReactKonva.Rect {...shapeDoc.data.attrs}/>;
+      return <ReactKonva.Rect {...shapeDoc.data.attrs} dragBoundFunc={dragBoundFunc}/>;
     }
     if (shapeDoc.data.className === 'Circle') {
-      return <ReactKonva.Circle {...shapeDoc.data.attrs}/>;
+      return <ReactKonva.Circle {...shapeDoc.data.attrs} dragBoundFunc={dragBoundFunc}/>;
     }
   });
 };
