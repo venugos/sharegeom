@@ -4,27 +4,31 @@ var ReactKonva = require('react-konva');
 var className = require('classnames');
 
 var onLayerClick = function (evt) {
-  console.log("Drag End", evt)
-}
+  console.log("Drag End", evt);
+};
 
 var onDragMove = function (evt) {
-  console.log("Drag Move", evt)
+  console.log("Drag Move", evt);
+};
 
-}
 
-var Canvas = (props) => {
-    return  (
-    <div className="stage">
-      <ReactKonva.Stage height={600} width={600}>
+var Canvas = React.createClass({
+  componentWillUnmount() {
+    //this.doc.unsubscribe();
+  },
+    
+  render: function () {
+    return (
+      <div className="stage">
+        <ReactKonva.Stage height={600} width={600}>
           <ReactKonva.Layer listening={true} onDragEnd={onLayerClick} onDragMove={onDragMove}>
-            { props.shapes } 
+            { this.props.shapes }
           </ReactKonva.Layer>
         </ReactKonva.Stage>
-    </div>
-  );
-}
+      </div>
+    );
+  }
 
+});
 
 module.exports = Canvas;
-
-

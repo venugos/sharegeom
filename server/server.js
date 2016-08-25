@@ -25,7 +25,16 @@ wss.on('connection', function(ws, req) {
   share.listen(stream);
 });
 
-// Create initial documents
+// // Create initial documents
+// {
+//   "attrs":{ "width":600, "height":600 },"className":"Stage", "children":[
+//     {
+//       "attrs": {}, "className": "Layer", "children": [
+//         { "attrs": { "x": 20, "y": 20, "radius": 10, "stroke": "black", "opacity": 0.5, "id": "06cd3a10-6a80-11e6-a419-2d4513a4e8d9", "draggable": true }, "className": "Circle" },
+//         { "attrs": { "x": 100, "y": 100, "width": 50, "height": 70, "stroke": "black", "opacity": 0.5, "id": "06cd6120-6a80-11e6-a419-2d4513a4e8d9", "draggable": true }, "className": "Rect" }]
+//     }]
+// }
+
 var connection = share.connect();
 connection.createFetchQuery('players', {}, {}, function(err, results) {
   if (err) { throw err; }
