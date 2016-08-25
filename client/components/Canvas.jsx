@@ -11,6 +11,15 @@ var onDragMove = function (evt) {
   console.log("Drag Move", evt.target.attrs);
 };
 
+var handleMove = function (shape) {
+  var op = [{ p: ['score'], na: 5 }];
+  connection.get('shapes', shape.id).submitOp(op, function (err) {
+    if (err) {
+      return console.error(err);
+    }
+  });
+};
+
 /// From server JSON data, create Konva elements and return them
 /// 
 var createShapeElements = function (shapeDocs) {
@@ -33,7 +42,7 @@ var Canvas = React.createClass({
 
   componentDidMount: function () {
     var comp = this;
-    var query = connection.createSubscribeQuery('shapes', {$sort: {score: -1}});
+    var query = connection.createSubscribeQuery('shapes', { $sort: { score: -1 } });
     query.on('ready', update);
     query.on('changed', update);
 
@@ -44,11 +53,11 @@ var Canvas = React.createClass({
   },
 
   render: function () {
-    console.log("Rendering shapes: ", this.state.shapes);
+    //console.log("Rendering shapes: ", this.state.shapes);
     return (
-      <div className="stage">
-        <ReactKonva.Stage height={600} width={600}>
-          <ReactKonva.Layer listening={true} onDragEnd={onLayerClick} onDragMove={onDragMove}>
+      <div className="stage" >
+        <ReactKonva.Stage  height={600} width={600}>
+          < ReactKonva.Layer listening={true} onDragEnd={onLayerClick} onDragMove={onDragMove}>
             { this.state.shapes }
           </ReactKonva.Layer>
         </ReactKonva.Stage>
