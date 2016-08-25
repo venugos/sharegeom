@@ -36,7 +36,6 @@ var initDoc = function () {
     opacity: 0.5,
     id: uuid.v1(),
     draggable: true,
-
   });
 
   var line = new Konva.Line({
