@@ -9,9 +9,8 @@ var ReactKonva = require('react-konva');
 
 
 var shapes = [
-<ReactKonva.Rect x={100} y={100} width={50} height={50} stroke= 'black' opacity={0.5} draggable="true"/>,
+<ReactKonva.Rect x={100} y={100} width={50} height={50} stroke='black' opacity={0.5} draggable="true" onClick={console.log("Rect clicked")}/>,
 <ReactKonva.Circle x={20} y={20} radius={10}  stroke='black' draggable="true" opacity={0.5}/>,
-
 ]
 
 var App = () => (
@@ -20,7 +19,7 @@ var App = () => (
       <div className="logo"></div>
       <h1 className="title">ShareGeom</h1>
         <Nav />
-      <Canvas shapes={shapes}/>
+      <Canvas shapes={shapes} />
     </div>
   </div>
 );
