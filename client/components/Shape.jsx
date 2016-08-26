@@ -44,6 +44,25 @@ var dragBoundFunc = function (pos) {
   };
 };
 
+var createClonedElement =function(cloneObj){
+  
+  if(cloneObj.getClassName() === "Circle"){
+     return <ReactKonva.Circle {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc}/>;
+  }
+  if(cloneObj.getClassName() === "Rect"){
+     return <ReactKonva.Rect {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc}/>;
+  }
+  if(cloneObj.getClassName() === "Text"){
+     return <ReactKonva.Text {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc}/>;
+  }
+  else{
+    console.log("not identified obj");
+  }
+    //}
+};
+
+
+
 var createShapeElement = function (shapeDoc) {
   console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
@@ -80,7 +99,7 @@ var createShapeElement = function (shapeDoc) {
 
 var Shape = React.createClass({
   propTypes: {
-    doc: React.PropTypes.object.isRequired,
+    doc: React.PropTypes.object,
   },
 
   componentDidMount: function () {
