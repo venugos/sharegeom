@@ -9,52 +9,67 @@ var uuid = require('node-uuid');
 var dragBoundFunc = function (pos) {
 
   // y 
- if (pos.y < 30) {
-  pos.y = 30;
- } else if (pos.y > 570) {
-  pos.y = 570;
- } 
- // x 
- if (pos.x < 30) {
-  pos.x = 30;
- } else if (pos.x > 570) {
-  pos.x = 570;
- }  
- // return  
- return {
+  if (pos.y < 30) {
+    pos.y = 30;
+  } else if (pos.y > 570) {
+    pos.y = 570;
+  }
+  // x 
+  if (pos.x < 30) {
+    pos.x = 30;
+  } else if (pos.x > 570) {
+    pos.x = 570;
+  }
+  // return  
+  return {
     x: pos.x,
     y: pos.y
   };
 };
 
+// var createClonedElement = function (cloneObj) {
 
-var createClonedElement =function(cloneObj){
-  
-  if(cloneObj.getClassName() === "Circle"){
-     return <ReactKonva.Circle {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   if (cloneObj.getClassName() === "Circle") {
+//     return <ReactKonva.Circle {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Rect") {
+//     return <ReactKonva.Rect {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Text") {
+//     return <ReactKonva.Text {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Line") {
+//     return <ReactKonva.Line {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   else {
+//     console.log("not identified obj");
+//   }
+// };
+var createClonedElement = function (cloneAttrs, name) {
+  if (name === "Circle") {
+    return <ReactKonva.Circle {...cloneAttrs } dragBoundFunc={dragBoundFunc} draggable="true"/>;
   }
-  if(cloneObj.getClassName() === "Rect"){
-     return <ReactKonva.Rect {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc} draggable="true"/>;
+  if (name === "Rect") {
+    return <ReactKonva.Rect {...cloneAttrs } dragBoundFunc={dragBoundFunc} draggable="true"/>;
   }
-  if(cloneObj.getClassName() === "Text"){
-     return <ReactKonva.Text {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc} draggable="true"/>;
+  if (name === "Text") {
+    return <ReactKonva.Text {...cloneAttrs } dragBoundFunc={dragBoundFunc} draggable="true"/>;
   }
-  if(cloneObj.getClassName() === "Line"){
-     return <ReactKonva.Line {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc} draggable="true"/>;
+  if (name === "Line") {
+    return <ReactKonva.Line {...cloneAttrs } dragBoundFunc={dragBoundFunc} draggable="true"/>;
   }
-  else{
+  else {
     console.log("not identified obj");
   }
-    //}
 };
 
 var palette = [
- <ReactKonva.Rect x={30} y={35} width={40} height={40} stroke='blue' strokeWidth={5} opacity={0.5}/>,
- <ReactKonva.Circle x={150} y={55} radius={20}  stroke='red' strokeWidth={5} opacity={0.5}/>,
- <ReactKonva.Text x={200} y={50} text="text" fontSize={16} fontFamily="Helvetica Neue" fontStyle="bold" fill="darkgray"/>,
- <ReactKonva.Line points={[300, 40, 320, 65]} stroke='green' strokeWidth={5} opacity={0.5}/>,
- <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5} />
- ]
+  <ReactKonva.Rect x={30} y={35} width={40} height={40} stroke='blue' strokeWidth={5} opacity={0.5} p={true}/>,
+  <ReactKonva.Circle x={150} y={55} radius={20}  stroke='red' strokeWidth={5} opacity={0.5} p={true}/>,
+  <ReactKonva.Text x={200} y={50} text="text" fontSize={16} fontFamily="Helvetica Neue" fontStyle="bold" fill="darkgray" p={true}/>,
+  <ReactKonva.Line points={[300, 40, 320, 65]} stroke='green' strokeWidth={5} opacity={0.5} p={true}/>,
+  <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5} p={true}/>
+]
 
 var Canvas = React.createClass({
   getInitialState: function () {
@@ -74,41 +89,72 @@ var Canvas = React.createClass({
 
     function update() {
       console.log("Query results: ", query.results);
-      comp.setState({ shapeDocs: query.results});
+      comp.setState({ shapeDocs: query.results });
     }
     comp.setState({ paletteShapes: palette });
   },
 
-  handleClick :function(evt) {
-  	console.log("event is ",evt);
-  	var clone=evt.target.clone({
-  		  	x: 200,
-        	y: 400,
-  		  id: uuid.v1(),
-  		  draggable:"true",
-  	  
-       })
-  	console.log("created the clone of ",clone.getClassName());
-  	console.log("id of clone is",clone.getId());
-    clone.setAttr('draggable', true);
-  	
-  	clone.off('click');
-  	//clone.setListening(false);
-  	
-  	
-  	//func call 
-  	
-  	this.state.shapes.push(createClonedElement(clone));
-  	console.log("shapes cloned are",this.state.shapes);
-      this.setState({shapes: this.state.shapes});
+  // handleClick: function (evt) {
+  //   console.log("event is ", evt);
+  //   if (!evt.target.attrs.p) {
+  //     console.log("Returnibg from handle click ", evt.target.attrs);
+  //     return;
+  //   }
 
-  	
-    },
+  //   var clone = evt.target.clone({
+  //     x: 200,
+  //     y: 400,
+  // 		id: uuid.v1(),
+  // 		draggable: "true",
+  //   });
+
+  //   delete clone.attrs.p;
+
+  //   console.log("created the clone of ", clone.getClassName());
+  //   console.log("id of clone is", clone.getId());
+  //   clone.setAttr('draggable', true);
+
+  //   clone.off('click');
+  //   //clone.setListening(false);
+  //   //func call 
+  //   this.state.shapes.push(createClonedElement(clone));
+  //   console.log("shapes cloned are", this.state.shapes);
+  //   this.setState({ shapes: this.state.shapes });
+  // },
+  handleClick: function (evt) {
+    console.log("event is ", evt);
+    if (!evt.target.attrs.p) {
+      console.log("Returnibg from handle click ", evt.target.attrs);
+      return;
+    }
+
+    var attrs = evt.target.attrs;
+    var cloneAttrs = {};
+    for (var prop in attrs) {
+      if (typeof prop != 'function')
+        cloneAttrs.prop = attrs.prop;
+    }
+
+    cloneAttrs.x = 200;
+    cloneAttrs.y = 400;
+
+    // console.log("created the clone of ", clone.getClassName());
+    // console.log("id of clone is", clone.getId());
+    //clone.setAttr('draggable', true);
+    delete cloneAttrs.p;
+
+    // clone.off('click');
+    //clone.setListening(false);
+    //func call 
+    this.state.shapes.push(createClonedElement(cloneAttrs, evt.target.className));
+    //console.log("shapes cloned are", this.state.shapes);
+    this.setState({ shapes: this.state.shapes });
+  },
 
   render: function () {
     // var { players, selectedPlayerId } = this.props;
     // var other = _.omit(this.shapes, 'players', 'selectedPlayerId');
-    
+
 
     var shapeNodes = this.state.shapeDocs.map(function (shapeDoc, index) {
       return <Shape doc={shapeDoc} key={shapeDoc.data.key} />;
