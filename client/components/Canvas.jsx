@@ -9,13 +9,13 @@ var uuid = require('node-uuid');
 var createClonedElement =function(cloneObj){
   
   if(cloneObj.getClassName() === "Circle"){
-     return <ReactKonva.Circle {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc}/>;
+     return <ReactKonva.Circle {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc} draggable="true"/>;
   }
   if(cloneObj.getClassName() === "Rect"){
-     return <ReactKonva.Rect {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc}/>;
+     return <ReactKonva.Rect {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc} draggable="true"/>;
   }
   if(cloneObj.getClassName() === "Text"){
-     return <ReactKonva.Text {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc}/>;
+     return <ReactKonva.Text {...cloneObj.getAttrs()} dragBoundFunc={Shape.dragBoundFunc} draggable="true"/>;
   }
   else{
     console.log("not identified obj");
@@ -28,7 +28,7 @@ var palette = [
  <ReactKonva.Circle x={150} y={55} radius={20}  stroke='red' strokeWidth={5} opacity={0.5}/>,
  <ReactKonva.Text x={200} y={50} text="text" fontSize={16} fontFamily="Helvetica Neue" fontStyle="bold" fill="darkgray"/>,
  <ReactKonva.Line points={[300, 40, 320, 65]} stroke='green' strokeWidth={5} opacity={0.5}/>,
- <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5}/>
+ <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5} />
  ]
 
 var Canvas = React.createClass({
@@ -49,24 +49,31 @@ var Canvas = React.createClass({
 
     function update() {
       console.log("Query results: ", query.results);
-      comp.setState({ shapeDocs: query.results });
+      comp.setState({ shapeDocs: query.results});
     }
     comp.setState({ paletteShapes: palette });
   },
 
   handleClick :function(evt) {
+  	console.log("event is ",evt);
   	var clone=evt.target.clone({
-  		  x: 40,
-  		  id: uuid.v1()
+  		  	x: 200,
+        	y: 400,
+  		  id: uuid.v1(),
+  		  draggable:"true",
+  	  
        })
   	console.log("created the clone of ",clone.getClassName());
   	console.log("id of clone is",clone.getId());
   	
-  	var cloneattr=clone.getAttrs();
-    // cloneattr.draggable=true;
+  	clone.off('click');
+  	//clone.setListening(false);
+  	
+  	
   	//func call 
-  	var node = 
+  	
   	this.state.shapes.push(createClonedElement(clone));
+  	console.log("shapes cloned are",this.state.shapes);
       this.setState({shapes: this.state.shapes});
     },
 
@@ -82,6 +89,10 @@ var Canvas = React.createClass({
     var paletteNodes = this.state.paletteShapes.map(function (item) {
       return item;
     });
+
+    // var shape2Nodes = this.state.shapes.map(function (item) {
+    //   return item;
+    // });
 
     return (
       <div className= "stage" >

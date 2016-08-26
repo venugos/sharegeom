@@ -21,6 +21,7 @@ var onDragStart = function (evt) {
 /// 
 var onDragMove = function (evt) {
   handleMove(evt.target.attrs);
+  
 };
 
 /// Send operations to the server
