@@ -41,9 +41,10 @@ var initDoc = function () {
   var line = new Konva.Line({
     points: [5, 70, 140, 250],
     stroke: 'green',
-    strokeWidth: 2,
+    strokeWidth: 5,
     lineCap: 'round',
     lineJoin: 'round',
+    visible: true,
     id: uuid.v1(),
     draggable: true
   });
