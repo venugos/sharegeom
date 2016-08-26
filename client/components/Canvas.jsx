@@ -35,7 +35,8 @@ var Canvas = React.createClass({
   getInitialState: function () {
     return {
       shapeDocs: [],
-      paletteShapes: []
+      paletteShapes: [],
+      shapes: []
     };
   },
 
@@ -62,6 +63,7 @@ var Canvas = React.createClass({
   	console.log("id of clone is",clone.getId());
   	
   	var cloneattr=clone.getAttrs();
+    // cloneattr.draggable=true;
   	//func call 
   	var node = 
   	this.state.shapes.push(createClonedElement(clone));
