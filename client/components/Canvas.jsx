@@ -5,10 +5,9 @@ var className = require('classnames');
 var Shape = require('./Shape.jsx');
 var uuid = require('node-uuid');
 var _ = require('underscore');
-
+var sharedb = require('sharedb/lib/client');
 
 var dragBoundFunc = function (pos) {
-
   // y 
   if (pos.y < 30) {
     pos.y = 30;
@@ -84,20 +83,19 @@ var Canvas = React.createClass({
   },
 
   onDragEnd: function (evt) {
-    var newShapes = this.state.shapes.slice();
-    for (var i = 0; i < newShapes.length; ++i) {
-      console.log(newShapes[i].props.id, evt.target.attrs.id);
+    // var newShapes = this.state.shapes.slice();
+    // for (var i = 0; i < newShapes.length; ++i) {
+    //   console.log(newShapes[i].props.id, evt.target.attrs.id);
 
-      if (newShapes[i].props.id === evt.target.attrs.id) {
-        newShapes[i].props.x = evt.target.attrs.x;
-        newShapes[i].props.y = evt.target.attrs.y;
-        console.log("Found element");
-        break;
-      }
-    }
+    //   if (newShapes[i].props.id === evt.target.attrs.id) {
+    //     newShapes[i] = this.createClonedElement(evt.target.attrs, evt.target.className);
+    //     console.log("Found element");
+    //     break;
+    //   }
+    // }
 
-    this.setState({ shapes: newShapes });
-    console.log(this.state.shapes);
+    // this.setState({ shapes: newShapes });
+    // console.log(this.state.shapes);
   },
 
   componentDidMount: function () {
@@ -184,15 +182,16 @@ var Canvas = React.createClass({
     //clone.setAttr('draggable', true);
     delete cloneAttrs.p;
     delete cloneAttrs.sceneFunc;
-    delete cloneAttrs.__proto__;
+
+    sharedb.Doc.create({ 'key': cloneAttrs.id, 'attrs': cloneAttrs, 'className': evt.target.className}); 
 
     // clone.off('click');
     //clone.setListening(false);
     //func call 
-    var elem = this.createClonedElement(cloneAttrs, evt.target.className);
-    this.state.shapes.push(elem);
-    //console.log("shapes cloned are", this.state.shapes);
-    this.setState({ shapes: this.state.shapes });
+    // var elem = this.createClonedElement(cloneAttrs, evt.target.className);
+    // this.state.shapes.push(elem);
+    // //console.log("shapes cloned are", this.state.shapes);
+    // this.setState({ shapes: this.state.shapes });
   },
 
   render: function () {

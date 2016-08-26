@@ -21,7 +21,6 @@ var onDragStart = function (evt) {
 /// 
 var onDragMove = function (evt) {
   handleMove(evt.target.attrs);
-  
 };
 
 /// Send operations to the server
@@ -56,8 +55,7 @@ var dragBoundFunc = function (pos) {
   };
 };
 
-var createClonedElement =function(cloneObj){
-  
+var createClonedElement =function(cloneObj) {
   if(cloneObj.getClassName() === "Circle"){
      return <ReactKonva.Circle {...cloneObj.getAttrs()} dragBoundFunc={dragBoundFunc}/>;
   }
@@ -70,10 +68,7 @@ var createClonedElement =function(cloneObj){
   else{
     console.log("not identified obj");
   }
-    //}
 };
-
-
 
 var createShapeElement = function (shapeDoc) {
   if (shapeDoc.data.className === 'Rect') {
