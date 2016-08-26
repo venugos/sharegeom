@@ -33,16 +33,40 @@ var className = require('classnames');
 var Shape = require('./Shape.jsx');
 var uuid = require('node-uuid');
 
+var dragBoundFunc = function (pos) {
+
+  // y 
+  if (pos.y < 30) {
+    pos.y = 30;
+  } else if (pos.y > 570) {
+    pos.y = 570;
+  }
+  // x 
+  if (pos.x < 30) {
+    pos.x = 30;
+  } else if (pos.x > 570) {
+    pos.x = 570;
+  }
+  // return  
+  return {
+    x: pos.x,
+    y: pos.y
+  };
+};
+
 var createClonedElement = function (cloneObj) {
 
   if (cloneObj.getClassName() === "Circle") {
-    return React.createElement(ReactKonva.Circle, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc, draggable: 'true' }));
+    return React.createElement(ReactKonva.Circle, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
   }
   if (cloneObj.getClassName() === "Rect") {
-    return React.createElement(ReactKonva.Rect, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc, draggable: 'true' }));
+    return React.createElement(ReactKonva.Rect, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
   }
   if (cloneObj.getClassName() === "Text") {
-    return React.createElement(ReactKonva.Text, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc, draggable: 'true' }));
+    return React.createElement(ReactKonva.Text, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
+  }
+  if (cloneObj.getClassName() === "Line") {
+    return React.createElement(ReactKonva.Line, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
   } else {
     console.log("not identified obj");
   }
@@ -87,6 +111,7 @@ var Canvas = React.createClass({
     });
     console.log("created the clone of ", clone.getClassName());
     console.log("id of clone is", clone.getId());
+    clone.setAttr('draggable', true);
 
     clone.off('click');
     //clone.setListening(false);
@@ -226,7 +251,6 @@ var createClonedElement = function (cloneObj) {
 };
 
 var createShapeElement = function (shapeDoc) {
-  console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
     return React.createElement(ReactKonva.Rect, _extends({}, shapeDoc.data.attrs, {
       dragBoundFunc: dragBoundFunc,
@@ -249,7 +273,6 @@ var createShapeElement = function (shapeDoc) {
       onDragMove: onDragMove }));
   }
   if (shapeDoc.data.className === 'Text') {
-    console.log("Creating a Text");
     return React.createElement(ReactKonva.Text, _extends({}, shapeDoc.data.attrs, {
       dragBoundFunc: dragBoundFunc,
       onDragStart: onDragStart,
@@ -303,7 +326,7 @@ connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host
 
 // Expose to index.html
 window.renderApp = function () {
-   Init();
+   //Init();
    ReactDOM.render(React.createElement(App, null), document.querySelector('#app'));
 };
 

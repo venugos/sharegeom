@@ -76,7 +76,6 @@ var createClonedElement =function(cloneObj){
 
 
 var createShapeElement = function (shapeDoc) {
-  console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
     return <ReactKonva.Rect {...shapeDoc.data.attrs}
       dragBoundFunc={dragBoundFunc}
@@ -100,7 +99,6 @@ var createShapeElement = function (shapeDoc) {
       onDragMove={onDragMove}/>;
   }
   if (shapeDoc.data.className === 'Text') {
-    console.log("Creating a Text");
     return <ReactKonva.Text {...shapeDoc.data.attrs}
       dragBoundFunc={dragBoundFunc}
       onDragStart={onDragStart}
