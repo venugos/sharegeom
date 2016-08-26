@@ -30,16 +30,20 @@ var ReactKonva = require('react-konva');
 var className = require('classnames');
 var Shape = require('./Shape.jsx');
 
+var palette = [React.createElement(ReactKonva.Rect, { x: 30, y: 35, width: 40, height: 40, stroke: 'blue', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Circle, { x: 150, y: 55, radius: 20, stroke: 'red', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Text, { x: 200, y: 50, text: 'text', fontSize: 16, fontFamily: 'Helvetica Neue', fontStyle: 'bold', fill: 'darkgray' }), React.createElement(ReactKonva.Line, { points: [300, 40, 320, 65], stroke: 'green', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Line, { points: [10, 100, 590, 100], stroke: 'darkgray', opacity: 0.5 })];
+
 var Canvas = React.createClass({
   displayName: 'Canvas',
 
   getInitialState: function () {
     return {
-      shapeDocs: []
+      shapeDocs: [],
+      paletteShapes: []
     };
   },
 
   componentDidMount: function () {
+    console.log(palette);
     var comp = this;
     var query = connection.createSubscribeQuery('shapes', { $sort: { score: -1 } });
     query.on('ready', update);
@@ -49,16 +53,21 @@ var Canvas = React.createClass({
       console.log("Query results: ", query.results);
       comp.setState({ shapeDocs: query.results });
     }
+    comp.setState({ paletteShapes: palette });
   },
 
   render: function () {
     // var { players, selectedPlayerId } = this.props;
     // var other = _.omit(this.shapes, 'players', 'selectedPlayerId');
+
+
     var shapeNodes = this.state.shapeDocs.map(function (shapeDoc, index) {
       return React.createElement(Shape, { doc: shapeDoc, key: shapeDoc.data.key });
     });
 
-    //console.log("Shape nodes: ", shapeNodes);
+    var paletteNodes = this.state.paletteShapes.map(function (item) {
+      return item;
+    });
 
     return React.createElement(
       'div',
@@ -69,7 +78,7 @@ var Canvas = React.createClass({
         React.createElement(
           ReactKonva.Layer,
           { listening: true },
-          shapeNodes
+          paletteNodes
         )
       )
     );
@@ -130,20 +139,58 @@ var handleMove = function (shape) {
   });
 };
 
+var dragBoundFunc = function (pos) {
+
+  // y 
+  if (pos.y < 30) {
+    pos.y = 30;
+  } else if (pos.y > 570) {
+    pos.y = 570;
+  }
+  // x 
+  if (pos.x < 30) {
+    pos.x = 30;
+  } else if (pos.x > 570) {
+    pos.x = 570;
+  }
+  // return  
+  return {
+    x: pos.x,
+    y: pos.y
+  };
+};
+
 var createShapeElement = function (shapeDoc) {
   console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
     return React.createElement(ReactKonva.Rect, _extends({}, shapeDoc.data.attrs, {
+      dragBoundFunc: dragBoundFunc,
       onDragStart: onDragStart,
       onDragEnd: onDragEnd,
       onDragMove: onDragMove }));
   }
   if (shapeDoc.data.className === 'Circle') {
     return React.createElement(ReactKonva.Circle, _extends({}, shapeDoc.data.attrs, {
+      dragBoundFunc: dragBoundFunc,
       onDragStart: onDragStart,
       onDragEnd: onDragEnd,
       onDragMove: onDragMove }));
   };
+  if (shapeDoc.data.className === 'Line') {
+    return React.createElement(ReactKonva.Line, _extends({}, shapeDoc.data.attrs, {
+      dragBoundFunc: dragBoundFunc,
+      onDragStart: onDragStart,
+      onDragEnd: onDragEnd,
+      onDragMove: onDragMove }));
+  }
+  if (shapeDoc.data.className === 'Text') {
+    console.log("Creating a Text");
+    return React.createElement(ReactKonva.Text, _extends({}, shapeDoc.data.attrs, {
+      dragBoundFunc: dragBoundFunc,
+      onDragStart: onDragStart,
+      onDragEnd: onDragEnd,
+      onDragMove: onDragMove }));
+  }
 };
 
 var Shape = React.createClass({
@@ -186,10 +233,13 @@ var Init = require('./initdoc');
 // Open WebSocket connection to ShareDB server
 connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
 
+// Use this when committing to heroku and lose the commit
+// connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
+
 // Expose to index.html
 window.renderApp = function () {
-  //Init();
-  ReactDOM.render(React.createElement(App, null), document.querySelector('#app'));
+   Init();
+   ReactDOM.render(React.createElement(App, null), document.querySelector('#app'));
 };
 
 },{"./App.jsx":1,"./initdoc":6,"react":293,"react-dom":149,"sharedb/lib/client":315}],6:[function(require,module,exports){
@@ -210,10 +260,11 @@ var initDoc = function () {
 
   // create a circle
   var circle = new Konva.Circle({
-    x: 20,
-    y: 20,
-    radius: 10,
-    stroke: 'black',
+    x: 50,
+    y: 60,
+    radius: 30,
+    stroke: 'red',
+    strokeWidth: 5,
     opacity: 0.5,
     id: uuid.v1(),
     draggable: true
@@ -221,12 +272,49 @@ var initDoc = function () {
 
   // create a rectangle
   var rect = new Konva.Rect({
-    x: 100,
-    y: 100,
+    x: 20,
+    y: 150,
     width: 50,
-    height: 70,
-    stroke: 'black',
+    height: 50,
+    stroke: 'blue',
+    strokeWidth: 5,
     opacity: 0.5,
+    id: uuid.v1(),
+    draggable: true
+  });
+
+  var line = new Konva.Line({
+    points: [5, 70, 140, 250],
+    stroke: 'green',
+    strokeWidth: 5,
+    lineCap: 'round',
+    lineJoin: 'round',
+    visible: true,
+    id: uuid.v1(),
+    draggable: true
+  });
+
+  var spline = new Konva.Line({
+    x: 20,
+    y: 300,
+    points: [25, 40, 75],
+    stroke: 'red',
+    strokeWidth: 2,
+    lineCap: 'round',
+    lineJoin: 'round',
+    tension: 1,
+    id: uuid.v1(),
+    draggable: true
+  });
+
+  var text = new Konva.Text({
+    x: 20,
+    y: 250,
+    text: 'aut viam inveniam aut faciam',
+    fontSize: 14,
+    fontFamily: 'Helvetica Neue',
+    fontStyle: 'bold',
+    fill: 'darkgray',
     id: uuid.v1(),
     draggable: true
   });
@@ -234,6 +322,9 @@ var initDoc = function () {
   // add shapes to the layer
   layer.add(circle);
   layer.add(rect);
+  layer.add(line);
+  layer.add(spline);
+  layer.add(text);
 
   // add the layer to the stage
   stage.add(layer);
@@ -14930,16 +15021,8 @@ utils.intFromLE = intFromLE;
 module.exports={
   "_args": [
     [
-      {
-        "raw": "elliptic@^6.0.0",
-        "scope": null,
-        "escapedName": "elliptic",
-        "name": "elliptic",
-        "rawSpec": "^6.0.0",
-        "spec": ">=6.0.0 <7.0.0",
-        "type": "range"
-      },
-      "/Users/sarat/jsess/sharegeom/node_modules/browserify-sign"
+      "elliptic@^6.0.0",
+      "/Users/jillshay/sharegeom/node_modules/browserify-sign"
     ]
   ],
   "_from": "elliptic@>=6.0.0 <7.0.0",
@@ -14953,17 +15036,16 @@ module.exports={
     "tmp": "tmp/elliptic-6.3.1.tgz_1465921413402_0.5202967382501811"
   },
   "_npmUser": {
-    "name": "indutny",
-    "email": "fedor@indutny.com"
+    "email": "fedor@indutny.com",
+    "name": "indutny"
   },
   "_npmVersion": "3.8.6",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "elliptic@^6.0.0",
-    "scope": null,
-    "escapedName": "elliptic",
     "name": "elliptic",
+    "raw": "elliptic@^6.0.0",
     "rawSpec": "^6.0.0",
+    "scope": null,
     "spec": ">=6.0.0 <7.0.0",
     "type": "range"
   },
@@ -14975,10 +15057,10 @@ module.exports={
   "_shasum": "17781f2109ab0ec686b146bdcff5d2e8c6aeceda",
   "_shrinkwrap": null,
   "_spec": "elliptic@^6.0.0",
-  "_where": "/Users/sarat/jsess/sharegeom/node_modules/browserify-sign",
+  "_where": "/Users/jillshay/sharegeom/node_modules/browserify-sign",
   "author": {
-    "name": "Fedor Indutny",
-    "email": "fedor@indutny.com"
+    "email": "fedor@indutny.com",
+    "name": "Fedor Indutny"
   },
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
@@ -15025,8 +15107,8 @@ module.exports={
   "main": "lib/elliptic.js",
   "maintainers": [
     {
-      "name": "indutny",
-      "email": "fedor@indutny.com"
+      "email": "fedor@indutny.com",
+      "name": "indutny"
     }
   ],
   "name": "elliptic",
