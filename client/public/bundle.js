@@ -54,26 +54,44 @@ var dragBoundFunc = function (pos) {
   };
 };
 
-var createClonedElement = function (cloneObj) {
+// var createClonedElement = function (cloneObj) {
 
-  if (cloneObj.getClassName() === "Circle") {
-    return React.createElement(ReactKonva.Circle, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
+//   if (cloneObj.getClassName() === "Circle") {
+//     return <ReactKonva.Circle {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Rect") {
+//     return <ReactKonva.Rect {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Text") {
+//     return <ReactKonva.Text {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   if (cloneObj.getClassName() === "Line") {
+//     return <ReactKonva.Line {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
+//   }
+//   else {
+//     console.log("not identified obj");
+//   }
+// };
+
+
+var createClonedElement = function (cloneAttrs, name) {
+  if (name === "Circle") {
+    return React.createElement(ReactKonva.Circle, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: onDragEnd, draggable: 'true' }));
   }
-  if (cloneObj.getClassName() === "Rect") {
-    return React.createElement(ReactKonva.Rect, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
+  if (name === "Rect") {
+    return React.createElement(ReactKonva.Rect, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: onDragEnd, draggable: 'true' }));
   }
-  if (cloneObj.getClassName() === "Text") {
-    return React.createElement(ReactKonva.Text, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
+  if (name === "Text") {
+    return React.createElement(ReactKonva.Text, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: onDragEnd, draggable: 'true' }));
   }
-  if (cloneObj.getClassName() === "Line") {
-    return React.createElement(ReactKonva.Line, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc, draggable: 'true' }));
+  if (name === "Line") {
+    return React.createElement(ReactKonva.Line, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: onDragEnd, draggable: 'true' }));
   } else {
     console.log("not identified obj");
   }
-  //}
 };
 
-var palette = [React.createElement(ReactKonva.Rect, { x: 30, y: 35, width: 40, height: 40, stroke: 'blue', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Circle, { x: 150, y: 55, radius: 20, stroke: 'red', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Text, { x: 200, y: 50, text: 'text', fontSize: 16, fontFamily: 'Helvetica Neue', fontStyle: 'bold', fill: 'darkgray' }), React.createElement(ReactKonva.Line, { points: [300, 40, 320, 65], stroke: 'green', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Line, { points: [10, 100, 590, 100], stroke: 'darkgray', opacity: 0.5 })];
+var palette = [React.createElement(ReactKonva.Rect, { x: 30, y: 35, width: 40, height: 40, stroke: 'blue', strokeWidth: 5, opacity: 0.5, p: true }), React.createElement(ReactKonva.Circle, { x: 150, y: 55, radius: 20, stroke: 'red', strokeWidth: 5, opacity: 0.5, p: true }), React.createElement(ReactKonva.Text, { x: 200, y: 50, text: 'text', fontSize: 16, fontFamily: 'Helvetica Neue', fontStyle: 'bold', fill: 'darkgray', p: true }), React.createElement(ReactKonva.Line, { points: [300, 40, 320, 65], stroke: 'green', strokeWidth: 5, opacity: 0.5, p: true }), React.createElement(ReactKonva.Line, { points: [10, 100, 590, 100], stroke: 'darkgray', opacity: 0.5, p: true })];
 
 var Canvas = React.createClass({
   displayName: 'Canvas',
@@ -84,6 +102,13 @@ var Canvas = React.createClass({
       paletteShapes: [],
       shapes: []
     };
+  },
+
+  onDragEnd: function (evt) {
+    this.state.shapes[evt.target.id] = evt.target;
+    this.setState({ shapes: this.state.shapes });
+
+    console.log(onDragEnd);
   },
 
   componentDidMount: function () {
@@ -100,27 +125,76 @@ var Canvas = React.createClass({
     comp.setState({ paletteShapes: palette });
   },
 
+  // handleClick: function (evt) {
+  //   console.log("event is ", evt);
+  //   if (!evt.target.attrs.p) {
+  //     console.log("Returnibg from handle click ", evt.target.attrs);
+  //     return;
+  //   }
+
+  //   var clone = evt.target.clone({
+  //     x: 200,
+  //     y: 400,
+  // 		id: uuid.v1(),
+  // 		draggable: "true",
+  //   });
+
+  //   delete clone.attrs.p;
+
+  //   console.log("created the clone of ", clone.getClassName());
+  //   console.log("id of clone is", clone.getId());
+  //   clone.setAttr('draggable', true);
+
+  //   clone.off('click');
+  //   //clone.setListening(false);
+  //   //func call 
+  //   this.state.shapes.push(createClonedElement(clone));
+  //   console.log("shapes cloned are", this.state.shapes);
+  //   this.setState({ shapes: this.state.shapes });
+  // },
+
+  createClonedElement: function (cloneAttrs, name) {
+    if (name === "Circle") {
+      return React.createElement(ReactKonva.Circle, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: this.onDragEnd, draggable: 'true' }));
+    }
+    if (name === "Rect") {
+      return React.createElement(ReactKonva.Rect, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: this.onDragEnd, draggable: 'true' }));
+    }
+    if (name === "Text") {
+      return React.createElement(ReactKonva.Text, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: this.onDragEnd, draggable: 'true' }));
+    }
+    if (name === "Line") {
+      return React.createElement(ReactKonva.Line, _extends({}, cloneAttrs, { dragBoundFunc: dragBoundFunc, onDragEnd: this.onDragEnd, draggable: 'true' }));
+    } else {
+      console.log("not identified obj");
+    }
+  },
+
   handleClick: function (evt) {
     console.log("event is ", evt);
-    var clone = evt.target.clone({
-      x: 200,
-      y: 400,
-      id: uuid.v1(),
-      draggable: "true"
+    if (!evt.target.attrs.p) {
+      console.log("Returnibg from handle click ", evt.target.attrs);
+      return;
+    }
 
-    });
-    console.log("created the clone of ", clone.getClassName());
-    console.log("id of clone is", clone.getId());
-    clone.setAttr('draggable', true);
+    var attrs = evt.target.attrs;
+    var cloneAttrs = {};
+    for (var prop in attrs) if (typeof prop !== 'function') cloneAttrs[prop] = attrs[prop];
 
-    clone.off('click');
+    cloneAttrs.x = 200;
+    cloneAttrs.y = 400;
+    cloneAttrs.id = uuid.v1();
+
+    // console.log("created the clone of ", clone.getClassName());
+    // console.log("id of clone is", clone.getId());
+    //clone.setAttr('draggable', true);
+    delete cloneAttrs.p;
+
+    // clone.off('click');
     //clone.setListening(false);
-
-
     //func call 
-
-    this.state.shapes.push(createClonedElement(clone));
-    console.log("shapes cloned are", this.state.shapes);
+    this.state.shapes[cloneAttrs.id] = createClonedElement(cloneAttrs, evt.target.className);
+    //console.log("shapes cloned are", this.state.shapes);
     this.setState({ shapes: this.state.shapes });
   },
 
@@ -15109,16 +15183,8 @@ utils.intFromLE = intFromLE;
 module.exports={
   "_args": [
     [
-      {
-        "raw": "elliptic@^6.0.0",
-        "scope": null,
-        "escapedName": "elliptic",
-        "name": "elliptic",
-        "rawSpec": "^6.0.0",
-        "spec": ">=6.0.0 <7.0.0",
-        "type": "range"
-      },
-      "/Users/tanejan/Documents/sf-bootcamp/sharegeom/node_modules/browserify-sign"
+      "elliptic@^6.0.0",
+      "/Users/jillshay/sharegeom/node_modules/browserify-sign"
     ]
   ],
   "_from": "elliptic@>=6.0.0 <7.0.0",
@@ -15132,17 +15198,16 @@ module.exports={
     "tmp": "tmp/elliptic-6.3.1.tgz_1465921413402_0.5202967382501811"
   },
   "_npmUser": {
-    "name": "indutny",
-    "email": "fedor@indutny.com"
+    "email": "fedor@indutny.com",
+    "name": "indutny"
   },
   "_npmVersion": "3.8.6",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "elliptic@^6.0.0",
-    "scope": null,
-    "escapedName": "elliptic",
     "name": "elliptic",
+    "raw": "elliptic@^6.0.0",
     "rawSpec": "^6.0.0",
+    "scope": null,
     "spec": ">=6.0.0 <7.0.0",
     "type": "range"
   },
@@ -15154,10 +15219,10 @@ module.exports={
   "_shasum": "17781f2109ab0ec686b146bdcff5d2e8c6aeceda",
   "_shrinkwrap": null,
   "_spec": "elliptic@^6.0.0",
-  "_where": "/Users/tanejan/Documents/sf-bootcamp/sharegeom/node_modules/browserify-sign",
+  "_where": "/Users/jillshay/sharegeom/node_modules/browserify-sign",
   "author": {
-    "name": "Fedor Indutny",
-    "email": "fedor@indutny.com"
+    "email": "fedor@indutny.com",
+    "name": "Fedor Indutny"
   },
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
@@ -15204,8 +15269,8 @@ module.exports={
   "main": "lib/elliptic.js",
   "maintainers": [
     {
-      "name": "indutny",
-      "email": "fedor@indutny.com"
+      "email": "fedor@indutny.com",
+      "name": "indutny"
     }
   ],
   "name": "elliptic",
