@@ -56,6 +56,7 @@ connection.createFetchQuery('shapes', {}, {}, function (err, results) {
 
   if (results.length === 0) {
     var shapes = [
+
       { "attrs": { "x":50,"y":50,"radius":25,"stroke":"red","strokeWidth":5,"opacity":0.5,"id":"153f80a0-6b14-11e6-9e62-0d0025ef39ce","draggable":true},"className":"Circle"},
       { "attrs": { "x":150,"y":25,"width":50,"height":50,"stroke":"blue","strokeWidth":5,"opacity":0.5,"id":"153fcec0-6b14-11e6-9e62-0d0025ef39ce","draggable":true},"className":"Rect"},
       { "attrs": { "points":[5,20, 25, 50],"stroke":"green","lineCap":"round","lineJoin":"round","id":"67b765e1-6b10-11e6-933d-93ca88ca7b1a","draggable":true, "opacity": .5},"className":"Line"},
@@ -70,7 +71,8 @@ connection.createFetchQuery('shapes', {}, {}, function (err, results) {
       //     attrs: props of shape,
       //   className: type of shape  
       // }
-      console.log("Shape: ", shape);
+
+      //console.log("Shape: ", shape);
       var data = { key: shape.attrs.id, attrs: shape.attrs, className: shape.className };
       doc.create(data);
     });
