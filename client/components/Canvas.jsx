@@ -82,8 +82,15 @@ var Canvas = React.createClass({
     };
   },
 
-  onDragEnd: function(evt) {
-    this.state.shapes[evt.target.id] = evt.target;
+  onDragEnd: function (evt) {
+    
+    for (var i = 0; i < this.state.shapes.length; ++i) {
+      if (_.contains(this.state.shapes[i], evt.target.id)) {
+        this.state.shapes[i] = evt.target;
+        break;
+      }
+    }
+    //this.state.shapes[evt.target.id] = evt.target;
     this.setState({ shapes: this.state.shapes });
 
     console.log(onDragEnd);
