@@ -47,23 +47,23 @@ var dragBoundFunc = function (pos) {
 // };
 
 
-var createClonedElement = function (cloneAttrs, name) {
-  if (name === "Circle") {
-    return <ReactKonva.Circle {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-  }
-  if (name === "Rect") {
-    return <ReactKonva.Rect {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-  }
-  if (name === "Text") {
-    return <ReactKonva.Text {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-  }
-  if (name === "Line") {
-    return <ReactKonva.Line {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-  }
-  else {
-    console.log("not identified obj");
-  }
-};
+// var createClonedElement = function (cloneAttrs, name) {
+//   if (name === "Circle") {
+//     return <ReactKonva.Circle {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
+//   }
+//   if (name === "Rect") {
+//     return <ReactKonva.Rect {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
+//   }
+//   if (name === "Text") {
+//     return <ReactKonva.Text {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
+//   }
+//   if (name === "Line") {
+//     return <ReactKonva.Line {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
+//   }
+//   else {
+//     console.log("not identified obj");
+//   }
+// };
 
 var palette = [
   <ReactKonva.Rect x={30} y={35} width={40} height={40} stroke='blue' strokeWidth={5} opacity={0.5} p={true}/>,
