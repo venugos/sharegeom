@@ -61,13 +61,13 @@ var Canvas = React.createClass({
        })
   	console.log("created the clone of ",clone.getClassName());
   	console.log("id of clone is",clone.getId());
+    clone.setAttr('draggable', true);
   	
   	var cloneattr=clone.getAttrs();
     // cloneattr.draggable=true;
   	//func call 
-  	var node = 
   	this.state.shapes.push(createClonedElement(clone));
-      this.setState({shapes: this.state.shapes});
+    this.setState({shapes: this.state.shapes});
     },
 
   render: function () {
