@@ -48,7 +48,21 @@ var createShapeElement = function (shapeDoc) {
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}/>;
-  };
+  }
+  if (shapeDoc.data.className === 'Line') {
+    return <ReactKonva.Line
+      {...shapeDoc.data.attrs}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragMove={onDragMove}/>;
+  }
+  if (shapeDoc.data.className === 'Text') {
+    return <ReactKonva.Text
+      {...shapeDoc.data.attrs}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragMove={onDragMove}/>;
+  }
 };
 
 var Shape = React.createClass({

@@ -143,7 +143,19 @@ var createShapeElement = function (shapeDoc) {
       onDragStart: onDragStart,
       onDragEnd: onDragEnd,
       onDragMove: onDragMove }));
-  };
+  }
+  if (shapeDoc.data.className === 'Line') {
+    return React.createElement(ReactKonva.Line, _extends({}, shapeDoc.data.attrs, {
+      onDragStart: onDragStart,
+      onDragEnd: onDragEnd,
+      onDragMove: onDragMove }));
+  }
+  if (shapeDoc.data.className === 'Text') {
+    return React.createElement(ReactKonva.Text, _extends({}, shapeDoc.data.attrs, {
+      onDragStart: onDragStart,
+      onDragEnd: onDragEnd,
+      onDragMove: onDragMove }));
+  }
 };
 
 var Shape = React.createClass({
@@ -184,7 +196,7 @@ var App = require('./App.jsx');
 var Init = require('./initdoc');
 
 // Open WebSocket connection to ShareDB server
-connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
+connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
 
 // Expose to index.html
 window.renderApp = function () {
@@ -14930,8 +14942,16 @@ utils.intFromLE = intFromLE;
 module.exports={
   "_args": [
     [
-      "elliptic@^6.0.0",
-      "/Users/jillshay/sharegeom/node_modules/browserify-sign"
+      {
+        "raw": "elliptic@^6.0.0",
+        "scope": null,
+        "escapedName": "elliptic",
+        "name": "elliptic",
+        "rawSpec": "^6.0.0",
+        "spec": ">=6.0.0 <7.0.0",
+        "type": "range"
+      },
+      "/Users/tanejan/Documents/sf-bootcamp/sharegeom/node_modules/browserify-sign"
     ]
   ],
   "_from": "elliptic@>=6.0.0 <7.0.0",
@@ -14945,16 +14965,17 @@ module.exports={
     "tmp": "tmp/elliptic-6.3.1.tgz_1465921413402_0.5202967382501811"
   },
   "_npmUser": {
-    "email": "fedor@indutny.com",
-    "name": "indutny"
+    "name": "indutny",
+    "email": "fedor@indutny.com"
   },
   "_npmVersion": "3.8.6",
   "_phantomChildren": {},
   "_requested": {
-    "name": "elliptic",
     "raw": "elliptic@^6.0.0",
-    "rawSpec": "^6.0.0",
     "scope": null,
+    "escapedName": "elliptic",
+    "name": "elliptic",
+    "rawSpec": "^6.0.0",
     "spec": ">=6.0.0 <7.0.0",
     "type": "range"
   },
@@ -14966,10 +14987,10 @@ module.exports={
   "_shasum": "17781f2109ab0ec686b146bdcff5d2e8c6aeceda",
   "_shrinkwrap": null,
   "_spec": "elliptic@^6.0.0",
-  "_where": "/Users/jillshay/sharegeom/node_modules/browserify-sign",
+  "_where": "/Users/tanejan/Documents/sf-bootcamp/sharegeom/node_modules/browserify-sign",
   "author": {
-    "email": "fedor@indutny.com",
-    "name": "Fedor Indutny"
+    "name": "Fedor Indutny",
+    "email": "fedor@indutny.com"
   },
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
@@ -15016,8 +15037,8 @@ module.exports={
   "main": "lib/elliptic.js",
   "maintainers": [
     {
-      "email": "fedor@indutny.com",
-      "name": "indutny"
+      "name": "indutny",
+      "email": "fedor@indutny.com"
     }
   ],
   "name": "elliptic",
