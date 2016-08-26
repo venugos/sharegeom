@@ -24,11 +24,30 @@ var App = () => React.createElement(
 module.exports = App;
 
 },{"./Canvas.jsx":2,"./Nav.jsx":3,"classnames":52,"react":293,"react-dom":149}],2:[function(require,module,exports){
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactKonva = require('react-konva');
 var className = require('classnames');
 var Shape = require('./Shape.jsx');
+var uuid = require('node-uuid');
+
+var createClonedElement = function (cloneObj) {
+
+  if (cloneObj.getClassName() === "Circle") {
+    return React.createElement(ReactKonva.Circle, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc }));
+  }
+  if (cloneObj.getClassName() === "Rect") {
+    return React.createElement(ReactKonva.Rect, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc }));
+  }
+  if (cloneObj.getClassName() === "Text") {
+    return React.createElement(ReactKonva.Text, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: Shape.dragBoundFunc }));
+  } else {
+    console.log("not identified obj");
+  }
+  //}
+};
 
 var palette = [React.createElement(ReactKonva.Rect, { x: 30, y: 35, width: 40, height: 40, stroke: 'blue', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Circle, { x: 150, y: 55, radius: 20, stroke: 'red', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Text, { x: 200, y: 50, text: 'text', fontSize: 16, fontFamily: 'Helvetica Neue', fontStyle: 'bold', fill: 'darkgray' }), React.createElement(ReactKonva.Line, { points: [300, 40, 320, 65], stroke: 'green', strokeWidth: 5, opacity: 0.5 }), React.createElement(ReactKonva.Line, { points: [10, 100, 590, 100], stroke: 'darkgray', opacity: 0.5 })];
 
@@ -56,6 +75,20 @@ var Canvas = React.createClass({
     comp.setState({ paletteShapes: palette });
   },
 
+  handleClick: function (evt) {
+    var clone = evt.target.clone({
+      x: 40,
+      id: uuid.v1()
+    });
+    console.log("created the clone of ", clone.getClassName());
+    console.log("id of clone is", clone.getId());
+
+    var cloneattr = clone.getAttrs();
+    //func call 
+    var node = this.state.shapes.push(createClonedElement(clone));
+    this.setState({ shapes: this.state.shapes });
+  },
+
   render: function () {
     // var { players, selectedPlayerId } = this.props;
     // var other = _.omit(this.shapes, 'players', 'selectedPlayerId');
@@ -77,8 +110,10 @@ var Canvas = React.createClass({
         { height: 600, width: 600 },
         React.createElement(
           ReactKonva.Layer,
-          { listening: true },
-          paletteNodes
+          { listening: true, onClick: this.handleClick },
+          paletteNodes,
+          shapeNodes,
+          this.state.shapes
         )
       )
     );
@@ -87,7 +122,7 @@ var Canvas = React.createClass({
 
 module.exports = Canvas;
 
-},{"./Shape.jsx":4,"classnames":52,"react":293,"react-dom":149,"react-konva":150}],3:[function(require,module,exports){
+},{"./Shape.jsx":4,"classnames":52,"node-uuid":129,"react":293,"react-dom":149,"react-konva":150}],3:[function(require,module,exports){
 //import React from 'react';
 var React = require('react');
 var className = require('classnames');
@@ -160,6 +195,22 @@ var dragBoundFunc = function (pos) {
   };
 };
 
+var createClonedElement = function (cloneObj) {
+
+  if (cloneObj.getClassName() === "Circle") {
+    return React.createElement(ReactKonva.Circle, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc }));
+  }
+  if (cloneObj.getClassName() === "Rect") {
+    return React.createElement(ReactKonva.Rect, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc }));
+  }
+  if (cloneObj.getClassName() === "Text") {
+    return React.createElement(ReactKonva.Text, _extends({}, cloneObj.getAttrs(), { dragBoundFunc: dragBoundFunc }));
+  } else {
+    console.log("not identified obj");
+  }
+  //}
+};
+
 var createShapeElement = function (shapeDoc) {
   console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
@@ -197,7 +248,7 @@ var Shape = React.createClass({
   displayName: 'Shape',
 
   propTypes: {
-    doc: React.PropTypes.object.isRequired
+    doc: React.PropTypes.object
   },
 
   componentDidMount: function () {
