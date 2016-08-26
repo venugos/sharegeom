@@ -4,6 +4,7 @@ var ReactKonva = require('react-konva');
 var className = require('classnames');
 var Shape = require('./Shape.jsx');
 var uuid = require('node-uuid');
+var _ = require('underscore');
 
 
 var dragBoundFunc = function (pos) {
@@ -83,17 +84,20 @@ var Canvas = React.createClass({
   },
 
   onDragEnd: function (evt) {
-    
-    for (var i = 0; i < this.state.shapes.length; ++i) {
-      if (_.contains(this.state.shapes[i], evt.target.id)) {
-        this.state.shapes[i] = evt.target;
+    var newShapes = this.state.shapes.slice();
+    for (var i = 0; i < newShapes.length; ++i) {
+      console.log(newShapes[i].props.id, evt.target.attrs.id);
+
+      if (newShapes[i].props.id === evt.target.attrs.id) {
+        newShapes[i].props.x = evt.target.attrs.x;
+        newShapes[i].props.y = evt.target.attrs.y;
+        console.log("Found element");
         break;
       }
     }
-    //this.state.shapes[evt.target.id] = evt.target;
-    this.setState({ shapes: this.state.shapes });
 
-    console.log(onDragEnd);
+    this.setState({ shapes: newShapes });
+    console.log(this.state.shapes);
   },
 
   componentDidMount: function () {
@@ -185,7 +189,8 @@ var Canvas = React.createClass({
     // clone.off('click');
     //clone.setListening(false);
     //func call 
-    this.state.shapes[cloneAttrs.id] = (this.createClonedElement(cloneAttrs, evt.target.className));
+    var elem = this.createClonedElement(cloneAttrs, evt.target.className);
+    this.state.shapes.push(elem);
     //console.log("shapes cloned are", this.state.shapes);
     this.setState({ shapes: this.state.shapes });
   },
