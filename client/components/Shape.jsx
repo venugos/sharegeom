@@ -2,8 +2,11 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactKonva = require('react-konva');
 var className = require('classnames');
+var lib = require('../lib/utils');
 
-var curDragTargetAttrs;
+// A couple of globals to store current dargged shape props
+let curDragTargetAttrs;
+let curDoc;
 
 /// On drag end update the arguments
 ///
@@ -13,8 +16,9 @@ var onDragEnd = function (evt) {
 
 /// On drag start, save the current state of the shape
 ///
-var onDragStart = function (evt) {
+var onDragStart = function (shapeDoc, evt) {
   curDragTargetAttrs = evt.target.attrs;
+  curDoc = shapeDoc;
 };
 
 /// On drag move try and update 
@@ -27,39 +31,42 @@ var onDragMove = function (evt) {
 /// 
 var handleMove = function (shape) {
   var op = [{ p: ['attrs'], od: curDragTargetAttrs, oi: shape }];
-  connection.get('shapes', shape.id).submitOp(op, function (err) {
+  curDoc.submitOp(op, function (err) {
     if (err) {
       return console.error(err);
     }
   });
 };
 
+/// From the server shape document data, create a corresponding
+/// React-Konva element for rendering
+/// 
 var createShapeElement = function (shapeDoc) {
-  console.log("Creating shape component!");
   if (shapeDoc.data.className === 'Rect') {
     return <ReactKonva.Rect {...shapeDoc.data.attrs}
-      onDragStart={onDragStart}
+      dragBoundFunc={lib.dragBoundFunc}
+      onDragStart={onDragStart.bind(this, shapeDoc) }
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}/>;
-  }
+  };
   if (shapeDoc.data.className === 'Circle') {
-    return <ReactKonva.Circle
-      {...shapeDoc.data.attrs}
-      onDragStart={onDragStart}
+    return <ReactKonva.Circle {...shapeDoc.data.attrs}
+      dragBoundFunc={lib.dragBoundFunc}
+      onDragStart={onDragStart.bind(this, shapeDoc) }
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}/>;
-  }
+  };
   if (shapeDoc.data.className === 'Line') {
-    return <ReactKonva.Line
-      {...shapeDoc.data.attrs}
-      onDragStart={onDragStart}
+    return <ReactKonva.Line {...shapeDoc.data.attrs}
+      dragBoundFunc={lib.dragBoundFunc}
+      onDragStart={onDragStart.bind(this, shapeDoc) }
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}/>;
   }
   if (shapeDoc.data.className === 'Text') {
-    return <ReactKonva.Text
-      {...shapeDoc.data.attrs}
-      onDragStart={onDragStart}
+    return <ReactKonva.Text {...shapeDoc.data.attrs}
+      dragBoundFunc={lib.dragBoundFunc}
+      onDragStart={onDragStart.bind(this, shapeDoc) }
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}/>;
   }
@@ -67,7 +74,7 @@ var createShapeElement = function (shapeDoc) {
 
 var Shape = React.createClass({
   propTypes: {
-    doc: React.PropTypes.object.isRequired,
+    doc: React.PropTypes.object,
   },
 
   componentDidMount: function () {
@@ -83,7 +90,7 @@ var Shape = React.createClass({
   },
 
   componentWillUnmount: function () {
-    this.doc.unsubscribe();
+    this.props.doc.unsubscribe();
   },
 
   render: function () {
