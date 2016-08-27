@@ -4,75 +4,24 @@ var ReactKonva = require('react-konva');
 var className = require('classnames');
 var Shape = require('./Shape.jsx');
 var uuid = require('node-uuid');
-var _ = require('underscore');
 var sharedb = require('sharedb/lib/client');
+var _ = require('underscore');
+var lib = require('../lib/utils');
 
-var dragBoundFunc = function (pos) {
-  // y 
-  if (pos.y < 30) {
-    pos.y = 30;
-  } else if (pos.y > 570) {
-    pos.y = 570;
-  }
-  // x 
-  if (pos.x < 30) {
-    pos.x = 30;
-  } else if (pos.x > 570) {
-    pos.x = 570;
-  }
-  // return  
-  return {
-    x: pos.x,
-    y: pos.y
-  };
-};
-
-// var createClonedElement = function (cloneObj) {
-
-//   if (cloneObj.getClassName() === "Circle") {
-//     return <ReactKonva.Circle {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
-//   }
-//   if (cloneObj.getClassName() === "Rect") {
-//     return <ReactKonva.Rect {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
-//   }
-//   if (cloneObj.getClassName() === "Text") {
-//     return <ReactKonva.Text {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
-//   }
-//   if (cloneObj.getClassName() === "Line") {
-//     return <ReactKonva.Line {...cloneObj.getAttrs() } dragBoundFunc={dragBoundFunc} draggable="true"/>;
-//   }
-//   else {
-//     console.log("not identified obj");
-//   }
-// };
-
-
-// var createClonedElement = function (cloneAttrs, name) {
-//   if (name === "Circle") {
-//     return <ReactKonva.Circle {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-//   }
-//   if (name === "Rect") {
-//     return <ReactKonva.Rect {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-//   }
-//   if (name === "Text") {
-//     return <ReactKonva.Text {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-//   }
-//   if (name === "Line") {
-//     return <ReactKonva.Line {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={onDragEnd} draggable="true"/>;
-//   }
-//   else {
-//     console.log("not identified obj");
-//   }
-// };
-
+/// A set of pre-defined palette shapes and even a UI Line
+/// masquerading as a separator
+///
 var palette = [
   <ReactKonva.Rect x={30} y={35} width={40} height={40} stroke='blue' strokeWidth={5} opacity={0.5} p={true}/>,
   <ReactKonva.Circle x={150} y={55} radius={20}  stroke='red' strokeWidth={5} opacity={0.5} p={true}/>,
   <ReactKonva.Text x={200} y={50} text="text" fontSize={16} fontFamily="Helvetica Neue" fontStyle="bold" fill="darkgray" p={true}/>,
   <ReactKonva.Line points={[300, 40, 320, 65]} stroke='green' strokeWidth={5} opacity={0.5} p={true}/>,
-  <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5} p={true}/>
-]
+  <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5}/> // Not exactly a palette item
+];
 
+/// The Canvas class. Palettes are Konva canvas elements themselves but behave
+/// differently from 'content' items
+/// 
 var Canvas = React.createClass({
   getInitialState: function () {
     return {
@@ -82,22 +31,9 @@ var Canvas = React.createClass({
     };
   },
 
-  onDragEnd: function (evt) {
-    // var newShapes = this.state.shapes.slice();
-    // for (var i = 0; i < newShapes.length; ++i) {
-    //   console.log(newShapes[i].props.id, evt.target.attrs.id);
-
-    //   if (newShapes[i].props.id === evt.target.attrs.id) {
-    //     newShapes[i] = this.createClonedElement(evt.target.attrs, evt.target.className);
-    //     console.log("Found element");
-    //     break;
-    //   }
-    // }
-
-    // this.setState({ shapes: newShapes });
-    // console.log(this.state.shapes);
-  },
-
+  /// Subscribe to the server collection and fetch items when the
+  /// collection updates
+  ///   
   componentDidMount: function () {
     console.log(palette);
     var comp = this;
@@ -106,99 +42,40 @@ var Canvas = React.createClass({
     query.on('changed', update);
 
     function update() {
-      console.log("Query results: ", query.results);
       comp.setState({ shapeDocs: query.results });
     }
     comp.setState({ paletteShapes: palette });
   },
 
- 
-
-  // handleClick: function (evt) {
-  //   console.log("event is ", evt);
-  //   if (!evt.target.attrs.p) {
-  //     console.log("Returnibg from handle click ", evt.target.attrs);
-  //     return;
-  //   }
-
-  //   var clone = evt.target.clone({
-  //     x: 200,
-  //     y: 400,
-  // 		id: uuid.v1(),
-  // 		draggable: "true",
-  //   });
-
-  //   delete clone.attrs.p;
-
-  //   console.log("created the clone of ", clone.getClassName());
-  //   console.log("id of clone is", clone.getId());
-  //   clone.setAttr('draggable', true);
-
-  //   clone.off('click');
-  //   //clone.setListening(false);
-  //   //func call 
-  //   this.state.shapes.push(createClonedElement(clone));
-  //   console.log("shapes cloned are", this.state.shapes);
-  //   this.setState({ shapes: this.state.shapes });
-  // },
-
-   createClonedElement: function (cloneAttrs, name) {
-    if (name === "Circle") {
-      return <ReactKonva.Circle {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={this.onDragEnd} draggable="true"/>;
-    }
-    if (name === "Rect") {
-      return <ReactKonva.Rect {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={this.onDragEnd} draggable="true"/>;
-    }
-    if (name === "Text") {
-      return <ReactKonva.Text {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={this.onDragEnd} draggable="true"/>;
-    }
-    if (name === "Line") {
-      return <ReactKonva.Line {...cloneAttrs } dragBoundFunc={dragBoundFunc} onDragEnd={this.onDragEnd} draggable="true"/>;
-    }
-    else {
-      console.log("not identified obj");
-    }
-  },
-
+  /// Handle click events on the layer so we can clone palette shapes
+  /// and create server shape documents
+  ///   
   handleClick: function (evt) {
-    console.log("event is ", evt);
-    if (!evt.target.attrs.p) {
-      console.log("Returnibg from handle click ", evt.target.attrs);
-      return;
+    var attrs = evt.target.attrs;
+    if (!attrs.p) {
+      return; // Not a palette item
     }
 
-    var attrs = evt.target.attrs;
-    var cloneAttrs = {};
-    for (var prop in attrs) 
-      if (typeof prop !== 'function' || typeof prop !== 'object') 
-        cloneAttrs[prop] = attrs[prop];
+    var clonedAttrs = {};
+    _.extend(clonedAttrs, attrs);
 
-    cloneAttrs.x = 200;
-    cloneAttrs.y = 400;
-    cloneAttrs.id= uuid.v1();
+    clonedAttrs.x = attrs.x + 10;
+    clonedAttrs.y = attrs.y + 10;
+    clonedAttrs.id = uuid.v1();
+    clonedAttrs.draggable = true;
+    clonedAttrs.dragBoundFunc = lib.dragBoundFunc;
 
-    // console.log("created the clone of ", clone.getClassName());
-    // console.log("id of clone is", clone.getId());
-    //clone.setAttr('draggable', true);
-    delete cloneAttrs.p;
-    delete cloneAttrs.sceneFunc;
+    delete clonedAttrs.p;
+    delete clonedAttrs.sceneFunc;
 
-    sharedb.Doc.create({ 'key': cloneAttrs.id, 'attrs': cloneAttrs, 'className': evt.target.className}); 
-
-    // clone.off('click');
-    //clone.setListening(false);
-    //func call 
-    // var elem = this.createClonedElement(cloneAttrs, evt.target.className);
-    // this.state.shapes.push(elem);
-    // //console.log("shapes cloned are", this.state.shapes);
-    // this.setState({ shapes: this.state.shapes });
+    // Get/create a server doc for the new element and stuff data into it    
+    var doc = connection.get("shapes", clonedAttrs.id);
+    doc.create({ 'key': clonedAttrs.id, 'attrs': clonedAttrs, 'className': evt.target.className });
   },
 
+  /// Render palette and content shapes~
+  ///    
   render: function () {
-    // var { players, selectedPlayerId } = this.props;
-    // var other = _.omit(this.shapes, 'players', 'selectedPlayerId');
-
-
     var shapeNodes = this.state.shapeDocs.map(function (shapeDoc, index) {
       return <Shape doc={shapeDoc} key={shapeDoc.data.key} />;
     });
@@ -207,17 +84,12 @@ var Canvas = React.createClass({
       return item;
     });
 
-    // var shape2Nodes = this.state.shapes.map(function (item) {
-    //   return item;
-    // });
-
     return (
       <div className= "stage" >
         <ReactKonva.Stage  height={600} width={600}>
           <ReactKonva.Layer listening={true} onClick={this.handleClick}>
             {paletteNodes}
             {shapeNodes}
-            {this.state.shapes}
           </ReactKonva.Layer>
         </ReactKonva.Stage>
       </div >
