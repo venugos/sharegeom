@@ -6,7 +6,7 @@ var Init = require('./initdoc');
 
 
 // Open WebSocket connection to ShareDB server
-connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
+connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
 
 // Use this when committing to heroku and lose the commit
 // connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
