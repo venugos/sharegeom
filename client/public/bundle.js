@@ -67,9 +67,11 @@ var Canvas = React.createClass({
       comp.setState({ shapeDocs: query.results });
     };
 
+    // Send a dummy message down the socket so that the connection
+    // is kept alive in a deployed scenarion such as Heroku, which
+    // will otherwise get closed in about a minute.    
     setInterval(function () {
-      connection.send("Keep me alive!");
-      console.log("sending message!");
+      connection.send({ 'message': "Keep me alive!" });
     }, 30000);
   },
 
