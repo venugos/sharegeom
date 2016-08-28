@@ -19,6 +19,8 @@ var palette = [
   <ReactKonva.Line points={[10, 100, 590, 100]} stroke='darkgray' opacity={0.5}/> // Not exactly a palette item
 ];
 
+let extras;
+
 /// The Canvas class. Palettes are Konva canvas elements themselves but behave
 /// differently from 'content' items
 /// 
@@ -34,13 +36,17 @@ var Canvas = React.createClass({
   ///   
   componentDidMount: function () {
     var comp = this;
-    var query = connection.createSubscribeQuery('shapes', { $sort: { score: -1 } });
+    var query = connection.createSubscribeQuery('shapes', { $sort: { key: -1 } });
     query.on('ready', update);
     query.on('changed', update);
 
     function update() {
       comp.setState({ shapeDocs: query.results });
-    }
+    };
+
+    setInterval(function () {
+      extras = query.extra;
+    }, 30000);  
   },
 
   /// Handle click events on the layer so we can clone palette shapes
