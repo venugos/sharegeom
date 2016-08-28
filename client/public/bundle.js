@@ -68,7 +68,8 @@ var Canvas = React.createClass({
     };
 
     setInterval(function () {
-      extras = query.extra;
+      connectio.sendMessage("Keep me alive!");
+      console.log("Querying!");
     }, 30000);
   },
 
@@ -256,10 +257,10 @@ var App = require('./App.jsx');
 var Init = require('./initdoc');
 
 // Open WebSocket connection to ShareDB server
-connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
+//connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
 
 // Use this when committing to heroku and lose the commit
-// connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
+connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
 
 // Expose to index.html
 window.renderApp = function () {
