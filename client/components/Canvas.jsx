@@ -46,7 +46,7 @@ var Canvas = React.createClass({
 
     setInterval(function () {
       connection.sendMessage("Keep me alive!");
-      console.log("Querying!");
+      console.log("sending message!");
     }, 30000);  
   },
 
