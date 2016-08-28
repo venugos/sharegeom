@@ -40,6 +40,8 @@ var lib = require('../lib/utils');
 var palette = [React.createElement(ReactKonva.Rect, { x: 30, y: 35, width: 40, height: 40, stroke: 'blue', strokeWidth: 5, opacity: 0.5, paletteItem: true }), React.createElement(ReactKonva.Circle, { x: 150, y: 55, radius: 20, stroke: 'red', strokeWidth: 5, opacity: 0.5, paletteItem: true }), React.createElement(ReactKonva.Text, { x: 200, y: 50, text: 'text', fontSize: 16, fontFamily: 'Helvetica Neue', fontStyle: 'bold', fill: 'darkgray', paletteItem: true }), React.createElement(ReactKonva.Line, { points: [300, 40, 320, 65], stroke: 'green', strokeWidth: 5, opacity: 0.5, paletteItem: true }), React.createElement(ReactKonva.Line, { points: [10, 100, 590, 100], stroke: 'darkgray', opacity: 0.5 }) // Not exactly a palette item
 ];
 
+let extras;
+
 /// The Canvas class. Palettes are Konva canvas elements themselves but behave
 /// differently from 'content' items
 /// 
@@ -57,13 +59,17 @@ var Canvas = React.createClass({
   ///   
   componentDidMount: function () {
     var comp = this;
-    var query = connection.createSubscribeQuery('shapes', { $sort: { score: -1 } });
+    var query = connection.createSubscribeQuery('shapes', { $sort: { key: -1 } });
     query.on('ready', update);
     query.on('changed', update);
 
     function update() {
       comp.setState({ shapeDocs: query.results });
-    }
+    };
+
+    setInterval(function () {
+      extras = query.extra;
+    }, 30000);
   },
 
   /// Handle click events on the layer so we can clone palette shapes
@@ -250,7 +256,7 @@ var App = require('./App.jsx');
 var Init = require('./initdoc');
 
 // Open WebSocket connection to ShareDB server
-connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
+connection = new sharedb.Connection(new WebSocket('ws://' + window.location.host));
 
 // Use this when committing to heroku and lose the commit
 // connection = new sharedb.Connection(new WebSocket('wss://' + window.location.host));
