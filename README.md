@@ -1,2 +1,2 @@
 # sharegeom
-Shared geometry editor with Konva and sharedb
+Shared geometry editor with React, Konva, sharedb
