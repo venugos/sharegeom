@@ -1,20 +1,21 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Konva = require('Konva');
 
 class MyRect extends React.Component {
-  constructor(...args) {
+  constructor (...args) {
     super(...args);
     this.state = {
       color: 'green'
     };
     this.handleClick = this.handleClick.bind(this);
   }
-  handleClick() {
+  handleClick () {
     this.setState({
       color: Konva.Util.getRandomColor()
     });
   }
-  render() {
+  render () {
     return (
       <ReactKonva.Rect
         x={10} y={10} width={50} height={50}

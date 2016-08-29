@@ -35,7 +35,7 @@ var initDoc = function () {
     strokeWidth: 5,
     opacity: 0.5,
     id: uuid.v1(),
-    draggable: true,
+    draggable: true
   });
 
   var line = new Konva.Line({
@@ -57,7 +57,7 @@ var initDoc = function () {
     strokeWidth: 2,
     lineCap: 'round',
     lineJoin: 'round',
-    tension : 1,
+    tension: 1,
     id: uuid.v1(),
     draggable: true
   });

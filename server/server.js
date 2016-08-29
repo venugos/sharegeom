@@ -5,11 +5,9 @@ var serveStatic = require('serve-static');
 var ShareDBMingoMemory = require('sharedb-mingo-memory');
 var WebSocketJSONStream = require('websocket-json-stream');
 var WebSocket = require('ws');
-var util = require('util');
-var Duplex = require('stream').Duplex;
 
 // Start ShareDB
-var share = ShareDB({ db: new ShareDBMingoMemory() });
+var share = new ShareDB({ db: new ShareDBMingoMemory() });
 
 // Create a WebSocket server
 var app = connect();
@@ -22,18 +20,19 @@ console.log("Listening on http://localhost:8080");
 
 // Connect any incoming WebSocket connection with ShareDB
 wss.on('connection', function (ws, req) {
-  var stream = new WebSocketJSONStream(ws);
+  let stream = new WebSocketJSONStream(ws);
   share.listen(stream);
 });
 
 var connection = share.connect();
-
 connection.createFetchQuery('shapes', {}, {}, function (err, results) {
-  if (err) { throw err; }
+  if (err) {
+    throw err;
+  }
 
   // Populate with a set of starting documents, but this is currently
   // empty. See below for some sample data.
-  //   
+  //
   if (results.length === 0) {
     var shapes = [];
 
@@ -42,10 +41,14 @@ connection.createFetchQuery('shapes', {}, {}, function (err, results) {
       // {
       //   key: uuid,
       //   attrs: props of shape,
-      //   className: type of shape  
+      //   className: type of shape
       // }
 
-      var data = { key: shape.attrs.id, attrs: shape.attrs, className: shape.className };
+      var data = {
+        key: shape.attrs.id,
+        attrs: shape.attrs,
+        className: shape.className
+      };
       doc.create(data);
     });
   }
