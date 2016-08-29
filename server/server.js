@@ -21,7 +21,7 @@ console.log("Listening on http://localhost:8080");
 
 // Connect any incoming WebSocket connection with ShareDB
 wss.on('connection', function (ws, req) {
-  let stream = new WebSocketJSONStream(ws);
+  var stream = new WebSocketJSONStream(ws);
   share.listen(stream);
 });
 
